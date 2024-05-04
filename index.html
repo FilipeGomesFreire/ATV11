@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Consulta de Filme por Título</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            text-align: center;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        input[type="text"] {
+            width: 80%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        button {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        #resultado {
+            text-align: left;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Consulta de Filme por Título</h1>
+        <input type="text" id="titulo" placeholder="Digite o título do filme">
+        <button onclick="buscarFilme()">Buscar</button>
+        <div id="resultado"></div>
+    </div>
+
+    <script>
+        function buscarFilme() {
+            var titulo = document.getElementById("titulo").value;
+            var apiKey = "f58e70fb";
+            var url = "http://www.omdbapi.com/?apikey=" + apiKey + "&t=" + encodeURIComponent(titulo);
+
+            fetch(url)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Erro na solicitação. Status do erro: ' + response.status);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    var resultado = `
+                        <h2>${data.Title}</h2>
+                        <p><strong>Ano:</strong> ${data.Year}</p>
+                        <p><strong>Classificação:</strong> ${data.Rated}</p>
+                        <p><strong>Duração:</strong> ${data.Runtime}</p>
+                        <p><strong>Gênero:</strong> ${data.Genre}</p>
+                        <p><strong>Diretor:</strong> ${data.Director}</p>
+                        <p><strong>Escritor:</strong> ${data.Writer}</p>
+                        <p><strong>Atores:</strong> ${data.Actors}</p>
+                        <p><strong>Enredo:</strong> ${data.Plot}</p>
+                        <img src="${data.Poster}" alt="${data.Title} Poster">
+                    `;
+                    document.getElementById("resultado").innerHTML = resultado;
+                })
+                .catch(error => console.error("Erro ao buscar filme:", error));
+        }
+    </script>
+</body>
+</html>
